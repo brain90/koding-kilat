@@ -1,5 +1,5 @@
-# koding-kilat
-Tutorial Kilat ! Dasar pemrograman menggunakan javascript. Dijamin Lancar dalam waktu 1 jam.
+# Koding Kilat
+Tutorial Kilat Dasar pemrograman menggunakan javascript. Dijamin faham dalam waktu 1 jam. 
 
 # Cara Menjalankan
 * Buka tautan berikut: https://jupyterlite.readthedocs.io/en/stable/_static/lab/index.html
