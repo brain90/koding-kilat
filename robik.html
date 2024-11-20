@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <title>Robik - Robot yang baik</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      #container {
+        display: flex;
+        gap: 20px;
+        position: relative;
+      }
+      #game-container {
+        width: 400px;
+        height: 400px;
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        grid-template-rows: repeat(10, 1fr);
+        border: 2px solid #000;
+        position: relative;
+        background-color: #f5f5f5;
+      }
+      .cell {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+      }
+      .snake {
+        background-color: green;
+        border-radius: 50%;
+      }
+      .mouse {
+        background-color: red;
+        border-radius: 50%;
+      }
+      #row-numbers,
+      #column-numbers {
+        position: absolute;
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+      }
+      #row-numbers {
+        top: 2px;
+        left: -20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 400px;
+      }
+      #column-numbers {
+        top: -20px;
+        left: 2px;
+        display: flex;
+        justify-content: space-between;
+        width: 400px;
+      }
+      #win-message {
+        display: none;
+        position: absolute;
+        top: 5%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        background: rgba(13, 144, 3, 0.8);
+        color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      #petunjuk {
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: left;
+      }
+ 
+    </style>
+  </head>
+  <body>
+    <div id="win-message">Sampah sudah bersih bosquh!</div>
+    <div id="container">
+      <div id="row-numbers"></div>
+      <div id="column-numbers"></div>
+      <div id="game-container"></div>
+    </div>
+<div>
+
+    <div id="petunjuk">
+                Panggil fungsi <code>move(arah)</code> untuk menggerakkan robik. Kode arah: <br>
+                        <code>r</code> → right<br>
+                            <code>l</code> → left<br>
+                                <code>u</code> → up<br>
+                                    <code>d</code> → down
+    </div>
+
+
+    <script>
+      const gameContainer = document.getElementById("game-container");
+      const rowNumbers = document.getElementById("row-numbers");
+      const columnNumbers = document.getElementById("column-numbers");
+
+      let snakePosition = { x: 0, y: 0 };
+      let mousePosition = {
+        x: Math.floor(Math.random() * 10),
+        y: Math.floor(Math.random() * 10),
+      };
+
+      function createGrid() {
+        for (let i = 0; i < 100; i++) {
+          const cell = document.createElement("div");
+          cell.className = "cell";
+          gameContainer.appendChild(cell);
+        }
+
+        for (let i = 1; i <= 10; i++) {
+          const rowNumber = document.createElement("div");
+          rowNumber.textContent = i;
+          rowNumbers.appendChild(rowNumber);
+
+          const columnNumber = document.createElement("div");
+          columnNumber.textContent = i;
+          columnNumbers.appendChild(columnNumber);
+        }
+      }
+
+      function updateGame() {
+        const cells = document.querySelectorAll(".cell");
+        cells.forEach((cell) => cell.classList.remove("snake", "mouse"));
+
+        const snakeIndex = snakePosition.y * 10 + snakePosition.x;
+        cells[snakeIndex].classList.add("snake");
+
+        const mouseIndex = mousePosition.y * 10 + mousePosition.x;
+        cells[mouseIndex].classList.add("mouse");
+
+        if (
+          snakePosition.x === mousePosition.x &&
+          snakePosition.y === mousePosition.y
+        ) {
+          const audio = new Audio("win.mp3");
+          audio.play();
+          const winMessage = document.getElementById("win-message");
+          winMessage.style.display = "block";
+
+          setTimeout(() => {
+            winMessage.style.display = "none";
+            resetGame();
+          }, 3000);
+        }
+      }
+
+      function resetGame() {
+        snakePosition = { x: 0, y: 0 };
+        mousePosition = {
+          x: Math.floor(Math.random() * 10),
+          y: Math.floor(Math.random() * 10),
+        };
+        updateGame();
+      }
+
+      function move(direction) {
+        switch (direction) {
+          case "u":
+            snakePosition.y = Math.max(0, snakePosition.y - 1);
+            break;
+          case "d":
+            snakePosition.y = Math.min(9, snakePosition.y + 1);
+            break;
+          case "l":
+            snakePosition.x = Math.max(0, snakePosition.x - 1);
+            break;
+          case "r":
+            snakePosition.x = Math.min(9, snakePosition.x + 1);
+            break;
+        }
+        updateGame();
+      }
+
+      createGrid();
+      updateGame();
+
+      /*
+          document.addEventListener('keydown', (event) => {
+              switch (event.key) {
+                  case 'ArrowUp':
+                      moveSnake('u');
+                      break;
+                  case 'ArrowDown':
+                      moveSnake('d');
+                      break;
+                  case 'ArrowLeft':
+                      moveSnake('l');
+                      break;
+                  case 'ArrowRight':
+                      moveSnake('r');
+                      break;
+              }
+          });
+          */
+    </script>
+  </body>
+</html>
